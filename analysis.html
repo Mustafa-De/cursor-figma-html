@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI分析 - AI笔记内容分析APP</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .analysis-header {
+            padding: 20px 16px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .analysis-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .analysis-subtitle {
+            color: #8e8e93;
+            font-size: 14px;
+        }
+        .analysis-tabs {
+            display: flex;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 16px;
+        }
+        .analysis-tab {
+            padding: 12px 16px;
+            font-weight: 600;
+            color: #8e8e93;
+            position: relative;
+        }
+        .analysis-tab.active {
+            color: #007aff;
+        }
+        .analysis-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #007aff;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+        .analysis-content {
+            padding: 16px;
+        }
+        .analysis-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 16px;
+            border-bottom: 1px solid #f2f2f7;
+            display: flex;
+            align-items: center;
+        }
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            color: white;
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .card-body {
+            padding: 16px;
+        }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .stat-item {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            color: #8e8e93;
+            font-size: 14px;
+        }
+        .chart-container {
+            height: 200px;
+            position: relative;
+        }
+        .chart-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+        .topic-list {
+            margin-top: 12px;
+        }
+        .topic-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f2f2f7;
+        }
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+        .topic-name {
+            font-weight: 500;
+        }
+        .topic-count {
+            color: #8e8e93;
+        }
+        .keyword-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .keyword-item {
+            padding: 8px 12px;
+            background-color: #f2f2f7;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+        .keyword-item.highlight {
+            background-color: #e9f5ff;
+            color: #007aff;
+        }
+        .sentiment-meter {
+            height: 8px;
+            background-color: #f2f2f7;
+            border-radius: 4px;
+            margin: 20px 0;
+            position: relative;
+        }
+        .sentiment-value {
+            position: absolute;
+            height: 16px;
+            width: 16px;
+            background-color: #007aff;
+            border-radius: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            left: 70%; /* 情感值位置 */
+        }
+        .sentiment-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            color: #8e8e93;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS状态栏 -->
+    <div class="ios-status-bar">
+        <div class="status-left">
+            <span class="status-time">14:30</span>
+        </div>
+        <div class="status-right">
+            <span class="signal-icon"><i class="fas fa-signal"></i></span>
+            <span class="wifi-icon"><i class="fas fa-wifi"></i></span>
+            <span class="battery-icon"><i class="fas fa-battery-full"></i></span>
+        </div>
+    </div>
+
+    <!-- 分析头部 -->
+    <div class="analysis-header">
+        <div class="analysis-title">AI笔记分析</div>
+        <div class="analysis-subtitle">基于您的28篇笔记生成的智能分析</div>
+    </div>
+
+    <!-- 分析标签页 -->
+    <div class="analysis-tabs">
+        <div class="analysis-tab active">概览</div>
+        <div class="analysis-tab">主题</div>
+        <div class="analysis-tab">情感</div>
+        <div class="analysis-tab">趋势</div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="analysis-content">
+            <!-- 笔记统计卡片 -->
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background-color: #007aff;">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="card-title">笔记统计</div>
+                </div>
+                <div class="card-body">
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">28</div>
+                            <div class="stat-label">总笔记数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">本周新增</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4.2K</div>
+                            <div class="stat-label">总字数</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">18</div>
+                            <div class="stat-label">标签数</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主题分布卡片 -->
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background-color: #5856d6;">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <div class="card-title">主题分布</div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <img src="https://via.placeholder.com/300x150?text=主题分布图" alt="主题分布图" style="max-width: 100%; max-height: 100%;">
+                        </div>
+                    </div>
+                    <div class="topic-list">
+                        <div class="topic-item">
+                            <div class="topic-name">工作计划</div>
+                            <div class="topic-count">8篇</div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="topic-name">学习笔记</div>
+                            <div class="topic-count">6篇</div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="topic-name">会议记录</div>
+                            <div class="topic-count">5篇</div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="topic-name">创意构思</div>
+                            <div class="topic-count">4篇</div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="topic-name">其他</div>
+                            <div class="topic-count">5篇</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关键词云卡片 -->
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background-color: #ff9500;">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div class="card-title">关键词云</div>
+                </div>
+                <div class="card-body">
+                    <div class="keyword-cloud">
+                        <div class="keyword-item highlight">设计</div>
+                        <div class="keyword-item">开发</div>
+                        <div class="keyword-item highlight">AI</div>
+                        <div class="keyword-item">产品</div>
+                        <div class="keyword-item">会议</div>
+                        <div class="keyword-item highlight">学习</div>
+                        <div class="keyword-item">计划</div>
+                        <div class="keyword-item">报告</div>
+                        <div class="keyword-item">研究</div>
+                        <div class="keyword-item highlight">项目</div>
+                        <div class="keyword-item">团队</div>
+                        <div class="keyword-item">创意</div>
+                        <div class="keyword-item">分析</div>
+                        <div class="keyword-item">用户</div>
+                        <div class="keyword-item">测试</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 情感分析卡片 -->
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background-color: #34c759;">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <div class="card-title">情感分析</div>
+                </div>
+                <div class="card-body">
+                    <div class="sentiment-meter">
+                        <div class="sentiment-value"></div>
+                    </div>
+                    <div class="sentiment-labels">
+                        <div>消极</div>
+                        <div>中性</div>
+                        <div>积极</div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <div class="font-semibold text-lg">整体情感倾向: 积极</div>
+                        <div class="text-gray-500 text-sm mt-1">您的笔记整体呈现积极的情感倾向，尤其在工作计划和创意构思方面</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 笔记活跃度卡片 -->
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="card-icon" style="background-color: #ff2d55;">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="card-title">笔记活跃度</div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <img src="https://via.placeholder.com/300x150?text=活跃度趋势图" alt="活跃度趋势图" style="max-width: 100%; max-height: 100%;">
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="font-semibold">洞察:</div>
+                        <ul class="list-disc pl-5 mt-2 text-gray-700">
+                            <li>您在工作日的笔记创建频率较高</li>
+                            <li>周二和周四是您最活跃的记录日</li>
+                            <li>相比上月，本月笔记数量增长了23%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="bottom-tab-bar">
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-home"></i></div>
+            <div>首页</div>
+        </div>
+        <div class="tab-item" data-page="categories.html">
+            <div class="tab-icon"><i class="fas fa-folder"></i></div>
+            <div>分类</div>
+        </div>
+        <div class="tab-item" data-page="edit.html">
+            <div class="tab-icon"><i class="fas fa-plus-circle"></i></div>
+            <div>新建</div>
+        </div>
+        <div class="tab-item active" data-page="analysis.html">
+            <div class="tab-icon"><i class="fas fa-chart-bar"></i></div>
+            <div>分析</div>
+        </div>
+        <div class="tab-item" data-page="settings.html">
+            <div class="tab-icon"><i class="fas fa-cog"></i></div>
+            <div>设置</div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        // 标签页切换
+        const tabs = document.querySelectorAll('.analysis-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                // 这里可以添加内容切换逻辑
+            });
+        });
+    </script>
+</body>
+</html> 

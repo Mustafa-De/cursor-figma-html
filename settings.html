@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>设置 - AI笔记内容分析APP</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .settings-header {
+            padding: 20px 16px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .settings-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .settings-section {
+            margin-top: 20px;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 16px;
+        }
+        .settings-section-header {
+            padding: 12px 16px;
+            color: #8e8e93;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .settings-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #f2f2f7;
+        }
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        .settings-item-left {
+            display: flex;
+            align-items: center;
+        }
+        .settings-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            color: white;
+        }
+        .settings-item-title {
+            font-weight: 500;
+        }
+        .settings-item-right {
+            display: flex;
+            align-items: center;
+            color: #8e8e93;
+        }
+        .settings-value {
+            margin-right: 8px;
+        }
+        .settings-arrow {
+            font-size: 12px;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            padding: 20px 16px;
+            background-color: white;
+            margin: 16px;
+            border-radius: 12px;
+        }
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background-color: #f2f2f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 16px;
+            overflow: hidden;
+        }
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .user-info {
+            flex: 1;
+        }
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .user-email {
+            color: #8e8e93;
+            font-size: 14px;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e4e4e4;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: #007aff;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+        .logout-button {
+            margin: 30px 16px;
+            padding: 14px;
+            background-color: #ff3b30;
+            color: white;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .version-info {
+            text-align: center;
+            color: #8e8e93;
+            font-size: 12px;
+            margin-top: 20px;
+            margin-bottom: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS状态栏 -->
+    <div class="ios-status-bar">
+        <div class="status-left">
+            <span class="status-time">14:30</span>
+        </div>
+        <div class="status-right">
+            <span class="signal-icon"><i class="fas fa-signal"></i></span>
+            <span class="wifi-icon"><i class="fas fa-wifi"></i></span>
+            <span class="battery-icon"><i class="fas fa-battery-full"></i></span>
+        </div>
+    </div>
+
+    <!-- 设置头部 -->
+    <div class="settings-header">
+        <div class="settings-title">设置</div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 用户资料 -->
+        <div class="user-profile">
+            <div class="user-avatar">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="用户头像">
+            </div>
+            <div class="user-info">
+                <div class="user-name">张明</div>
+                <div class="user-email">zhangming@example.com</div>
+            </div>
+            <div class="settings-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+
+        <!-- 账户设置 -->
+        <div class="settings-section">
+            <div class="settings-section-header">账户设置</div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #007aff;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="settings-item-title">个人资料</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #5856d6;">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="settings-item-title">通知设置</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #ff9500;">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="settings-item-title">隐私与安全</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI设置 -->
+        <div class="settings-section">
+            <div class="settings-section-header">AI设置</div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #34c759;">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="settings-item-title">AI分析偏好</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #ff2d55;">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <div class="settings-item-title">自动分析</div>
+                </div>
+                <div class="settings-item-right">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #af52de;">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="settings-item-title">智能建议</div>
+                </div>
+                <div class="settings-item-right">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用设置 -->
+        <div class="settings-section">
+            <div class="settings-section-header">应用设置</div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #5ac8fa;">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="settings-item-title">语言</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-value">简体中文</div>
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #ff9500;">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div class="settings-item-title">深色模式</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-value">跟随系统</div>
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #8e8e93;">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="settings-item-title">存储管理</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-value">1.2GB</div>
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 支持与反馈 -->
+        <div class="settings-section">
+            <div class="settings-section-header">支持与反馈</div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #007aff;">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="settings-item-title">帮助中心</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #5856d6;">
+                        <i class="fas fa-comment-alt"></i>
+                    </div>
+                    <div class="settings-item-title">反馈问题</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="settings-item">
+                <div class="settings-item-left">
+                    <div class="settings-icon" style="background-color: #ff2d55;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="settings-item-title">评分应用</div>
+                </div>
+                <div class="settings-item-right">
+                    <div class="settings-arrow">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 退出登录按钮 -->
+        <div class="logout-button" onclick="navigateTo('welcome.html')">
+            退出登录
+        </div>
+
+        <!-- 版本信息 -->
+        <div class="version-info">
+            版本 1.0.0 (Build 2025030701)
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="bottom-tab-bar">
+        <div class="tab-item" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-home"></i></div>
+            <div>首页</div>
+        </div>
+        <div class="tab-item" data-page="categories.html">
+            <div class="tab-icon"><i class="fas fa-folder"></i></div>
+            <div>分类</div>
+        </div>
+        <div class="tab-item" data-page="edit.html">
+            <div class="tab-icon"><i class="fas fa-plus-circle"></i></div>
+            <div>新建</div>
+        </div>
+        <div class="tab-item" data-page="analysis.html">
+            <div class="tab-icon"><i class="fas fa-chart-bar"></i></div>
+            <div>分析</div>
+        </div>
+        <div class="tab-item active" data-page="settings.html">
+            <div class="tab-icon"><i class="fas fa-cog"></i></div>
+            <div>设置</div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+</body>
+</html> 

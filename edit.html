@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>创建笔记 - AI笔记内容分析APP</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .edit-header {
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #fff;
+        }
+        .cancel-button, .save-button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .cancel-button {
+            color: #8e8e93;
+        }
+        .save-button {
+            background-color: #007aff;
+            color: white;
+        }
+        .edit-title {
+            width: 100%;
+            padding: 16px;
+            font-size: 22px;
+            font-weight: 600;
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .edit-content {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            line-height: 1.5;
+            border: none;
+            outline: none;
+            resize: none;
+            flex: 1;
+            min-height: 200px;
+        }
+        .toolbar {
+            display: flex;
+            padding: 10px 16px;
+            border-top: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
+            overflow-x: auto;
+        }
+        .tool-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 8px;
+            color: #333;
+            background-color: white;
+            border: 1px solid #e0e0e0;
+        }
+        .tool-button.active {
+            background-color: #007aff;
+            color: white;
+            border-color: #007aff;
+        }
+        .tag-container {
+            padding: 10px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .tag-item {
+            padding: 6px 12px;
+            background-color: #e9f5ff;
+            color: #007aff;
+            border-radius: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        .tag-remove {
+            margin-left: 6px;
+            font-size: 12px;
+        }
+        .add-tag {
+            padding: 6px 12px;
+            background-color: #f2f2f7;
+            color: #8e8e93;
+            border-radius: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        .category-selector {
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .category-label {
+            font-weight: 600;
+            margin-right: 10px;
+            color: #333;
+        }
+        .category-value {
+            flex: 1;
+            padding: 8px 12px;
+            background-color: #f2f2f7;
+            border-radius: 8px;
+            color: #333;
+        }
+        .ai-assist-button {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background-color: #007aff;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            z-index: 10;
+        }
+        .ai-assist-icon {
+            font-size: 24px;
+        }
+        .ai-suggestions {
+            padding: 16px;
+            background-color: #f0f7ff;
+            border-radius: 12px;
+            margin: 16px;
+            display: none;
+        }
+        .ai-suggestions.active {
+            display: block;
+        }
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .suggestion-title {
+            font-weight: 600;
+            color: #007aff;
+            display: flex;
+            align-items: center;
+        }
+        .suggestion-icon {
+            margin-right: 8px;
+        }
+        .suggestion-close {
+            color: #8e8e93;
+        }
+        .suggestion-item {
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #007aff;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS状态栏 -->
+    <div class="ios-status-bar">
+        <div class="status-left">
+            <span class="status-time">14:30</span>
+        </div>
+        <div class="status-right">
+            <span class="signal-icon"><i class="fas fa-signal"></i></span>
+            <span class="wifi-icon"><i class="fas fa-wifi"></i></span>
+            <span class="battery-icon"><i class="fas fa-battery-full"></i></span>
+        </div>
+    </div>
+
+    <!-- 编辑头部 -->
+    <div class="edit-header">
+        <button class="cancel-button" onclick="navigateTo('home.html')">取消</button>
+        <button class="save-button" onclick="saveNote()">保存</button>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <input type="text" class="edit-title" placeholder="笔记标题">
+        
+        <!-- 分类选择器 -->
+        <div class="category-selector">
+            <div class="category-label">分类</div>
+            <div class="category-value">
+                <select class="bg-transparent w-full outline-none">
+                    <option>工作</option>
+                    <option>学习</option>
+                    <option>个人</option>
+                    <option>创意</option>
+                    <option>其他</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- 标签容器 -->
+        <div class="tag-container">
+            <div class="tag-item">
+                会议 <span class="tag-remove"><i class="fas fa-times"></i></span>
+            </div>
+            <div class="tag-item">
+                设计 <span class="tag-remove"><i class="fas fa-times"></i></span>
+            </div>
+            <div class="add-tag">
+                <i class="fas fa-plus mr-1"></i> 添加标签
+            </div>
+        </div>
+        
+        <!-- 编辑区域 -->
+        <textarea class="edit-content" placeholder="开始输入笔记内容..."></textarea>
+        
+        <!-- AI建议 -->
+        <div class="ai-suggestions" id="aiSuggestions">
+            <div class="suggestion-header">
+                <div class="suggestion-title">
+                    <span class="suggestion-icon"><i class="fas fa-lightbulb"></i></span>
+                    AI智能建议
+                </div>
+                <div class="suggestion-close" onclick="toggleAISuggestions()">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="suggestion-item">
+                添加更多关于设计方案的细节，例如色彩选择和布局结构。
+            </div>
+            <div class="suggestion-item">
+                考虑添加一个"下一步行动"部分，列出会议后需要完成的任务。
+            </div>
+            <div class="suggestion-item">
+                建议添加"UI/UX"标签，以便更好地分类此笔记。
+            </div>
+        </div>
+    </div>
+
+    <!-- 工具栏 -->
+    <div class="toolbar">
+        <button class="tool-button"><i class="fas fa-bold"></i></button>
+        <button class="tool-button"><i class="fas fa-italic"></i></button>
+        <button class="tool-button"><i class="fas fa-underline"></i></button>
+        <button class="tool-button"><i class="fas fa-list-ul"></i></button>
+        <button class="tool-button"><i class="fas fa-list-ol"></i></button>
+        <button class="tool-button"><i class="fas fa-check-square"></i></button>
+        <button class="tool-button"><i class="fas fa-link"></i></button>
+        <button class="tool-button"><i class="fas fa-image"></i></button>
+        <button class="tool-button"><i class="fas fa-microphone"></i></button>
+    </div>
+
+    <!-- AI辅助按钮 -->
+    <div class="ai-assist-button" onclick="toggleAISuggestions()">
+        <div class="ai-assist-icon"><i class="fas fa-magic"></i></div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script>
+        function saveNote() {
+            // 模拟保存笔记
+            showToast('笔记已保存');
+            setTimeout(() => {
+                navigateTo('home.html');
+            }, 1000);
+        }
+        
+        function toggleAISuggestions() {
+            const suggestions = document.getElementById('aiSuggestions');
+            suggestions.classList.toggle('active');
+        }
+        
+        // 工具按钮点击效果
+        const toolButtons = document.querySelectorAll('.tool-button');
+        toolButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html> 

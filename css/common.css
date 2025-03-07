@@ -1,0 +1,197 @@
+/* 通用样式 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* iOS状态栏 */
+.ios-status-bar {
+    height: 44px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.status-left {
+    display: flex;
+    align-items: center;
+}
+
+.status-time {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.status-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.signal-icon, .wifi-icon, .battery-icon {
+    font-size: 14px;
+}
+
+/* 主内容区域 */
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 83px; /* 底部导航栏高度 + 额外空间 */
+}
+
+/* 底部导航栏 */
+.bottom-tab-bar {
+    height: 83px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #8e8e93;
+    font-size: 10px;
+    width: 20%;
+}
+
+.tab-item.active {
+    color: #007aff;
+}
+
+.tab-icon {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+/* 卡片样式 */
+.card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin: 12px;
+    padding: 16px;
+}
+
+/* 按钮样式 */
+.primary-button {
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 600;
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+.secondary-button {
+    background-color: #f2f2f7;
+    color: #007aff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 600;
+    font-size: 16px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* 输入框样式 */
+.input-field {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 16px;
+    margin-bottom: 16px;
+    background-color: #f9f9f9;
+}
+
+/* 标题样式 */
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 20px 16px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 16px 16px 8px;
+}
+
+/* 标签样式 */
+.tag {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #e9f5ff;
+    color: #007aff;
+    border-radius: 16px;
+    font-size: 12px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+/* AI分析结果样式 */
+.ai-analysis-card {
+    background-color: #f0f7ff;
+    border-left: 4px solid #007aff;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 加载指示器 */
+.loading-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007aff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} 

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>笔记详情 - AI笔记内容分析APP</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        .detail-header {
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .back-button {
+            color: #007aff;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .back-icon {
+            margin-right: 4px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            color: #8e8e93;
+        }
+        .note-title-container {
+            padding: 20px 16px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .note-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .note-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #8e8e93;
+            font-size: 14px;
+        }
+        .note-content {
+            padding: 20px 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .note-paragraph {
+            margin-bottom: 16px;
+        }
+        .note-tags {
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-top: 1px solid #e0e0e0;
+            background-color: #f9f9f9;
+        }
+        .note-tag {
+            padding: 6px 12px;
+            background-color: #e9f5ff;
+            color: #007aff;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+        .ai-analysis-section {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: #f0f7ff;
+            border-radius: 12px;
+            margin: 16px;
+        }
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .analysis-icon {
+            width: 36px;
+            height: 36px;
+            background-color: #007aff;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            margin-right: 12px;
+        }
+        .analysis-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #007aff;
+        }
+        .analysis-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #007aff;
+        }
+        .analysis-item-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .related-notes {
+            margin-top: 20px;
+            padding: 0 16px;
+        }
+        .related-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .related-note {
+            display: flex;
+            padding: 12px;
+            background-color: white;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .related-note-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #f2f2f7;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            color: #8e8e93;
+        }
+        .related-note-info {
+            flex: 1;
+        }
+        .related-note-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .related-note-meta {
+            color: #8e8e93;
+            font-size: 12px;
+        }
+        .floating-action-button {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background-color: #007aff;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            z-index: 10;
+        }
+        .fab-icon {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS状态栏 -->
+    <div class="ios-status-bar">
+        <div class="status-left">
+            <span class="status-time">14:30</span>
+        </div>
+        <div class="status-right">
+            <span class="signal-icon"><i class="fas fa-signal"></i></span>
+            <span class="wifi-icon"><i class="fas fa-wifi"></i></span>
+            <span class="battery-icon"><i class="fas fa-battery-full"></i></span>
+        </div>
+    </div>
+
+    <!-- 详情头部 -->
+    <div class="detail-header">
+        <div class="back-button" onclick="navigateTo('home.html')">
+            <span class="back-icon"><i class="fas fa-chevron-left"></i></span>
+            <span>返回</span>
+        </div>
+        <div class="action-buttons">
+            <i class="far fa-star"></i>
+            <i class="far fa-share-square"></i>
+            <i class="fas fa-ellipsis-h"></i>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 笔记标题 -->
+        <div class="note-title-container">
+            <div class="note-title">产品设计会议记录</div>
+            <div class="note-meta">
+                <div>工作</div>
+                <div>今天 10:30</div>
+            </div>
+        </div>
+
+        <!-- 笔记内容 -->
+        <div class="note-content">
+            <div class="note-paragraph">
+                <strong>会议目的：</strong>讨论新产品的UI设计方案，确定主色调和交互逻辑。
+            </div>
+            <div class="note-paragraph">
+                <strong>参会人员：</strong>产品经理、UI设计师、前端开发、后端开发、测试
+            </div>
+            <div class="note-paragraph">
+                <strong>讨论内容：</strong>
+            </div>
+            <div class="note-paragraph">
+                1. 产品经理介绍了产品的目标用户群体和核心功能需求。目标用户主要是25-35岁的年轻专业人士，核心需求是高效管理个人信息和提升工作效率。
+            </div>
+            <div class="note-paragraph">
+                2. UI设计师展示了三套不同风格的设计方案：
+                <br>- 方案A：简约风格，以蓝色为主色调
+                <br>- 方案B：现代风格，以紫色渐变为主色调
+                <br>- 方案C：商务风格，以深灰色为主色调
+            </div>
+            <div class="note-paragraph">
+                3. 经过讨论，团队一致认为方案A更符合目标用户的审美和使用习惯，决定采用该方案作为基础，并进行以下调整：
+                <br>- 主色调调整为更柔和的蓝色(#3B82F6)
+                <br>- 增加辅助色彩以提升视觉层次
+                <br>- 优化按钮和表单元素的交互反馈
+            </div>
+            <div class="note-paragraph">
+                4. 前端开发提出了关于动画效果和页面过渡的建议，团队决定采用简洁的过渡动画，避免过度设计影响用户体验。
+            </div>
+            <div class="note-paragraph">
+                5. 后端开发讨论了API接口设计和数据结构，确保前后端协作顺畅。
+            </div>
+            <div class="note-paragraph">
+                <strong>下一步计划：</strong>
+                <br>1. UI设计师完善设计方案，提供完整的设计规范文档
+                <br>2. 前端开发开始搭建基础框架
+                <br>3. 产品经理整理用户反馈，进一步优化产品需求
+            </div>
+            <div class="note-paragraph">
+                <strong>会议结论：</strong>采用方案A作为基础设计方向，下周五前完成第一版设计稿，并安排评审会议。
+            </div>
+        </div>
+
+        <!-- 标签 -->
+        <div class="note-tags">
+            <div class="note-tag">设计</div>
+            <div class="note-tag">会议</div>
+            <div class="note-tag">产品</div>
+            <div class="note-tag">UI/UX</div>
+        </div>
+
+        <!-- AI分析 -->
+        <div class="ai-analysis-section">
+            <div class="analysis-header">
+                <div class="analysis-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="analysis-title">AI智能分析</div>
+            </div>
+            <div class="analysis-item">
+                <div class="analysis-item-title">关键决策</div>
+                <div>采用简约风格的设计方案A，主色调为蓝色(#3B82F6)</div>
+            </div>
+            <div class="analysis-item">
+                <div class="analysis-item-title">待办事项</div>
+                <div>UI设计师需在下周五前完成第一版设计稿</div>
+            </div>
+            <div class="analysis-item">
+                <div class="analysis-item-title">相关人员</div>
+                <div>产品经理、UI设计师、前端开发、后端开发、测试</div>
+            </div>
+        </div>
+
+        <!-- 相关笔记 -->
+        <div class="related-notes">
+            <div class="related-title">相关笔记</div>
+            <div class="related-note" onclick="navigateTo('detail.html')">
+                <div class="related-note-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="related-note-info">
+                    <div class="related-note-title">产品需求分析文档</div>
+                    <div class="related-note-meta">3天前</div>
+                </div>
+            </div>
+            <div class="related-note" onclick="navigateTo('detail.html')">
+                <div class="related-note-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="related-note-info">
+                    <div class="related-note-title">UI设计规范讨论</div>
+                    <div class="related-note-meta">1周前</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮动操作按钮 -->
+    <div class="floating-action-button" onclick="navigateTo('edit.html')">
+        <div class="fab-icon"><i class="fas fa-edit"></i></div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="bottom-tab-bar">
+        <div class="tab-item active" data-page="home.html">
+            <div class="tab-icon"><i class="fas fa-home"></i></div>
+            <div>首页</div>
+        </div>
+        <div class="tab-item" data-page="categories.html">
+            <div class="tab-icon"><i class="fas fa-folder"></i></div>
+            <div>分类</div>
+        </div>
+        <div class="tab-item" data-page="edit.html">
+            <div class="tab-icon"><i class="fas fa-plus-circle"></i></div>
+            <div>新建</div>
+        </div>
+        <div class="tab-item" data-page="analysis.html">
+            <div class="tab-icon"><i class="fas fa-chart-bar"></i></div>
+            <div>分析</div>
+        </div>
+        <div class="tab-item" data-page="settings.html">
+            <div class="tab-icon"><i class="fas fa-cog"></i></div>
+            <div>设置</div>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+</body>
+</html> 

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI笔记内容分析APP - 原型</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .prototype-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background-color: white;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border: 12px solid #1a1a1a;
+            margin-bottom: 2rem;
+        }
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background-color: #1a1a1a;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 10;
+        }
+        .screen {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        .screen iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .screen-label {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 0.5rem;
+            font-size: 1.2rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-lg">
+        <h1 class="text-3xl font-bold text-center">AI笔记内容分析APP - 高保真原型</h1>
+        <p class="text-center mt-2">基于HTML和Tailwind CSS构建的交互式原型</p>
+    </header>
+
+    <div class="prototype-container">
+        <!-- 欢迎/登录界面 -->
+        <div>
+            <div class="phone-frame">
+                <div class="screen">
+                    <iframe src="welcome.html" title="欢迎/登录界面"></iframe>
+                </div>
+            </div>
+            <div class="screen-label">欢迎/登录界面</div>
+        </div>
+
+        <!-- 主页/笔记列表 -->
+        <div>
+            <div class="phone-frame">
+                <div class="screen">
+                    <iframe src="home.html" title="主页/笔记列表"></iframe>
+                </div>
+            </div>
+            <div class="screen-label">主页/笔记列表</div>
+        </div>
+
+        <!-- 笔记创建/编辑界面 -->
+        <div>
+            <div class="phone-frame">
+                <div class="screen">
+                    <iframe src="edit.html" title="笔记创建/编辑界面"></iframe>
+                </div>
+            </div>
+            <div class="screen-label">笔记创建/编辑界面</div>
+        </div>
+
+        <!-- AI分析结果界面 -->
+        <div>
+            <div class="phone-frame">
+                <div class="screen">
+                    <iframe src="analysis.html" title="AI分析结果界面"></iframe>
+                </div>
+            </div>
+            <div class="screen-label">AI分析结果界面</div>
+        </div>
+
+        <!-- 笔记详情界面 -->
+        <div>
+            <div class="phone-frame">
+                <div class="screen">
+                    <iframe src="detail.html" title="笔记详情界面"></iframe>
+                </div>
+            </div>
+            <div class="screen-label">笔记详情界面</div>
+        </div>
+
+        <!-- 分类/标签管理界面 -->
+        <div>
+            <div class="phone-frame">
+                <div class="screen">
+                    <iframe src="categories.html" title="分类/标签管理界面"></iframe>
+                </div>
+            </div>
+            <div class="screen-label">分类/标签管理界面</div>
+        </div>
+
+        <!-- 设置界面 -->
+        <div>
+            <div class="phone-frame">
+                <div class="screen">
+                    <iframe src="settings.html" title="设置界面"></iframe>
+                </div>
+            </div>
+            <div class="screen-label">设置界面</div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white p-6 mt-10">
+        <p class="text-center">© 2025 AI笔记内容分析APP - 原型设计</p>
+    </footer>
+</body>
+</html> 
